@@ -2,18 +2,32 @@ FROM ubuntu:trusty
 MAINTAINER ASCDC <asdc.sinica@gmail.com>
 
 ADD run.sh /run.sh
+ADD locale.gen /etc/locale.gen
+ADD locale-archive /usr/lib/locale/locale-archive
+ADD set_root_pw.sh /set_root_pw.sh
 
 RUN DEBIAN_FRONTEND=noninteractive && \
 	chmod +x /*.sh && \
 	apt-get update && \
-	apt-get -y install software-properties-common python-software-properties && \
-	locale-gen en_US.UTF-8 && \
-	export LANG=en_US.UTF-8 && \
+	apt-get -y install -y locales software-properties-common python-software-properties openssh-server pwgen wget vim && \
+	mkdir -p /var/run/sshd && \
+	sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && \
+	sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && \
+	sed -i "s/PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config && \
+	echo "cd /var/www/html" >> /root/.profile && \
+	echo "alias ll='ls -al'" >> /root/.profile && \
+	echo "export LANG=zh_TW.UTF-8" >> /root/.profile && \ 
+	echo "export LANGUAGE=zh_TW" >> /root/.profile && \
+	echo "export LC_ALL=zh_TW.UTF-8" >> /root/.profile && \
+	locale-gen zh_TW.UTF-8 && \
+	dpkg-reconfigure locales && \
+	export LANG=zh_TW.UTF-8 && \
 	add-apt-repository -y ppa:ondrej/php && \
 	add-apt-repository -y ppa:ondrej/apache2
+
 RUN DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	apt-get -y upgrade && \
-	apt-get install -y apache2 php5.6 php5.6-common php5.6-json php5.6-opcache php5.6-zip php5.6-mysql php5.6-phpdbg php5.6-gd php5.6-imap php5.6-ldap php5.6-pgsql php5.6-pspell php5.6-recode php5.6-tidy php5.6-dev php5.6-intl php5.6-curl php5.6-mcrypt php5.6-xmlrpc php5.6-xsl php5.6-bz2 php5.6-mbstring pkg-config libmagickwand-dev imagemagick build-essential libapache2-mod-php5 wget vim && \
+	apt-get install -y apache2 php5.6 php5.6-common php5.6-json php5.6-opcache php5.6-zip php5.6-mysql php5.6-phpdbg php5.6-gd php5.6-imap php5.6-ldap php5.6-pgsql php5.6-pspell php5.6-recode php5.6-tidy php5.6-dev php5.6-intl php5.6-curl php5.6-mcrypt php5.6-xmlrpc php5.6-xsl php5.6-bz2 php5.6-mbstring pkg-config libmagickwand-dev imagemagick build-essential libapache2-mod-php5 && \
 	echo 'autodetect'|pecl install imagick uploadprogress memcache mongodb && \
 	echo "extension=imagick.so" | sudo tee /etc/php/5.6/mods-available/imagick.ini && \
 	echo "extension=uploadprogress.so" | sudo tee /etc/php/5.6/mods-available/uploadprogress.ini && \
@@ -32,6 +46,11 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	mv /var/www/html/*.html /var/www/html/public && \
 	sed -i "s/DocumentRoot.*/DocumentRoot \/var\/www\/html\/public/g" /etc/apache2/sites-available/000-default.conf && \
 	sed -i "s/<\/VirtualHost>/\t<Directory \"\/var\/www\/html\/public\">\n\t\tAllowOverride All\n\t<\/Directory>\n<\/VirtualHost>/g" /etc/apache2/sites-available/000-default.conf
+
+ENV LANG zh_TW.UTF-8  
+ENV LANGUAGE zh_TW
+ENV LC_ALL zh_TW.UTF-8
+ENV AUTHORIZED_KEYS **None**
 	
 EXPOSE 80
 WORKDIR /var/www/html
