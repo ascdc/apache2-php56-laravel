@@ -19,6 +19,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 	echo "export LANG=zh_TW.UTF-8" >> /root/.profile && \ 
 	echo "export LANGUAGE=zh_TW" >> /root/.profile && \
 	echo "export LC_ALL=zh_TW.UTF-8" >> /root/.profile && \
+	echo "export PATH=$PATH:/root/.composer/vendor/bin" >> /root/.profile && \
 	locale-gen zh_TW.UTF-8 && \
 	dpkg-reconfigure locales && \
 	export LANG=zh_TW.UTF-8 && \
