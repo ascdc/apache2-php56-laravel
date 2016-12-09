@@ -1,6 +1,7 @@
 #!/bin/bash
 
-
+export NVM_DIR="/root/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 export PATH=$PATH:/root/.composer/vendor/bin
 
 find /var/www/html -type d -exec chmod 755 {} \;

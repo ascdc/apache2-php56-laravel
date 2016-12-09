@@ -20,6 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive && \
 	echo "export LANGUAGE=zh_TW" >> /root/.profile && \
 	echo "export LC_ALL=zh_TW.UTF-8" >> /root/.profile && \
 	echo "export PATH=$PATH:/root/.composer/vendor/bin" >> /root/.profile && \
+	echo "export NVM_DIR="/root/.nvm"" >> /root/.profile && \
 	locale-gen zh_TW.UTF-8 && \
 	dpkg-reconfigure locales && \
 	export LANG=zh_TW.UTF-8 && \
@@ -46,12 +47,18 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	mkdir /var/www/html/public && \
 	mv /var/www/html/*.html /var/www/html/public && \
 	sed -i "s/DocumentRoot.*/DocumentRoot \/var\/www\/html\/public/g" /etc/apache2/sites-available/000-default.conf && \
-	sed -i "s/<\/VirtualHost>/\t<Directory \"\/var\/www\/html\/public\">\n\t\tAllowOverride All\n\t<\/Directory>\n<\/VirtualHost>/g" /etc/apache2/sites-available/000-default.conf
+	sed -i "s/<\/VirtualHost>/\t<Directory \"\/var\/www\/html\/public\">\n\t\tAllowOverride All\n\t<\/Directory>\n<\/VirtualHost>/g" /etc/apache2/sites-available/000-default.conf && \
+	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash && \
+	export NVM_DIR="/root/.nvm" && \
+	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && \
+	nvm install v6.9.2 && \
+	nvm use v6.9.2
 
 ENV LANG zh_TW.UTF-8  
 ENV LANGUAGE zh_TW
 ENV LC_ALL zh_TW.UTF-8
 ENV AUTHORIZED_KEYS **None**
+ENV NVM_DIR /root/.nvm
 	
 EXPOSE 80
 WORKDIR /var/www/html
