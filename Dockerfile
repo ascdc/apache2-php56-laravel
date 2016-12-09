@@ -9,7 +9,7 @@ ADD set_root_pw.sh /set_root_pw.sh
 RUN DEBIAN_FRONTEND=noninteractive && \
 	chmod +x /*.sh && \
 	apt-get update && \
-	apt-get -y install -y locales software-properties-common python-software-properties openssh-server pwgen wget vim git && \
+	apt-get -y install -y locales software-properties-common python-software-properties openssh-server pwgen wget curl vim git && \
 	mkdir -p /var/run/sshd && \
 	sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && \
 	sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && \
