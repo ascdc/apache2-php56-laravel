@@ -40,6 +40,10 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get update && \
 	ln -sf /etc/php/5.6/mods-available/uploadprogress.ini /etc/php/5.6/apache2/conf.d/20-uploadprogress.ini && \
 	ln -sf /etc/php/5.6/mods-available/memcache.ini /etc/php/5.6/apache2/conf.d/20-memcache.ini && \
 	ln -sf /etc/php/5.6/mods-available/mongodb.ini /etc/php/5.6/apache2/conf.d/20-mongodb.ini && \
+	ln -sf /etc/php/5.6/mods-available/imagick.ini /etc/php/5.6/cli/conf.d/20-imagick.ini && \
+	ln -sf /etc/php/5.6/mods-available/uploadprogress.ini /etc/php/5.6/cli/conf.d/20-uploadprogress.ini && \
+	ln -sf /etc/php/5.6/mods-available/memcache.ini /etc/php/5.6/cli/conf.d/20-memcache.ini && \
+	ln -sf /etc/php/5.6/mods-available/mongodb.ini /etc/php/5.6/cli/conf.d/20-mongodb.ini && \
 	ln -s ../mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load && \
 	wget -qO /usr/local/bin/composer https://getcomposer.org/composer.phar && \
 	chmod 755 /usr/local/bin/composer && \
